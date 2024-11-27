@@ -53,4 +53,12 @@ export class UsersService {
 
     return { data: newUser };
   }
+
+  async deleteUser(id: string): Promise<{ data: Users }> {
+    const user = await this.getUser(id);
+
+    const deletedUser = await this.usersRepo.delete({ id: id });
+
+    return { data: user.data };
+  }
 }
