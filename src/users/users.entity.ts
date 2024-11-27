@@ -5,8 +5,10 @@ import {
   ObjectId,
   ObjectIdColumn,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { ROLE } from './dto/create-user.dto';
 
 @Entity()
 export class Users {
@@ -19,14 +21,14 @@ export class Users {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string | null;
 
   @Column()
-  role: string;
+  role: ROLE;
 
   @BeforeInsert()
   generateId() {
