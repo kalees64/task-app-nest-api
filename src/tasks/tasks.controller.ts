@@ -7,14 +7,19 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Tasks } from './tasks.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('tasks')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
