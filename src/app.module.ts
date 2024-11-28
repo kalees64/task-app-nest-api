@@ -16,7 +16,7 @@ import { ConfigModule } from '@nestjs/config';
       type: 'mongodb',
       url: process.env.MONGO_URL,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: false,
       useUnifiedTopology: true,
     }),
     UsersModule,

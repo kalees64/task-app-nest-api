@@ -9,10 +9,13 @@ import {
 
 import { v4 as uuid } from 'uuid';
 import { PRIORITY, STATUS } from './dto/create-task.dto';
+import { Users } from 'src/users/users.entity';
+import { Exclude, Transform } from 'class-transformer';
 
 @Entity()
 export class Tasks {
   @ObjectIdColumn()
+  @Exclude()
   _id: ObjectId;
 
   @PrimaryGeneratedColumn('uuid')
@@ -48,11 +51,11 @@ export class Tasks {
   @Column({ default: null })
   due_date: string | null;
 
-  @Column({ default: null })
-  assigned_to: string | null;
+  @Column(() => Users)
+  assigned_to: Users | null;
 
-  @Column({ default: null })
-  created_by: string | null;
+  @Column(() => Users)
+  created_by: Users | null;
 
   @BeforeInsert()
   generateId() {

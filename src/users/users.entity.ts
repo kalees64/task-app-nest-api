@@ -5,14 +5,15 @@ import {
   ObjectId,
   ObjectIdColumn,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { ROLE } from './dto/create-user.dto';
+import { Exclude, Transform } from 'class-transformer';
 
 @Entity()
 export class Users {
   @ObjectIdColumn()
+  @Exclude()
   _id: ObjectId;
 
   @PrimaryGeneratedColumn('uuid')
@@ -25,6 +26,7 @@ export class Users {
   email: string;
 
   @Column()
+  @Exclude()
   password: string | null;
 
   @Column()

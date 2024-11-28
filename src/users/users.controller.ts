@@ -5,7 +5,11 @@ import { Body, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Users } from './users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+
+import { ApiTags } from '@nestjs/swagger';
+
 import { UpdateUserDto } from './dto/update-user.dto';
+
 
 @Controller('users')
 export class UsersController {
