@@ -64,12 +64,20 @@ export class TasksService {
   async updateTask(id: string, task: UpdateTaskDto): Promise<{ data: Tasks }> {
     let getAssignedUser: { data: Users };
 
+    let getExistingTaskData: { data: Tasks };
+
     if (task.assigned_to) {
       getAssignedUser = await this.userService.getUser(task.assigned_to);
+      getExistingTaskData = await this.getTask(id);
     }
     const updateTask = await this.tasksRepo.update(
       { id: id },
-      { ...task, assigned_to: task.assigned_to ? getAssignedUser.data : null },
+      {
+        ...task,
+        assigned_to: task.assigned_to
+          ? getAssignedUser.data
+          : getExistingTaskData.data.assigned_to,
+      },
     );
 
     if (!updateTask) {

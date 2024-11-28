@@ -56,21 +56,18 @@ export class UsersService {
     return { data: newUser };
   }
 
-
   async deleteUser(id: string): Promise<{ data: Users }> {
     const user = await this.getUser(id);
 
     const deletedUser = await this.usersRepo.delete({ id: id });
 
     return { data: user.data };
-}
+  }
 
   async updateUser(id: string, user: UpdateUserDto): Promise<{ data: Users }> {
     if (!Object.keys(user).length) {
       throw new BadRequestException();
     }
-
-    console.log(user);
 
     const updateUser = await this.usersRepo.update({ id: id }, user);
 
@@ -81,6 +78,5 @@ export class UsersService {
     const updatedUser = await this.getUser(id);
 
     return { data: updatedUser.data };
-
   }
 }
