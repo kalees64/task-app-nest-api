@@ -4,12 +4,15 @@ import { Tasks } from './tasks.entity';
 import { MongoRepository } from 'typeorm';
 import { CreateTaskDto, STATUS } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { UsersService } from 'src/users/users.service';
+import { Users } from 'src/users/users.entity';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Tasks)
     private readonly tasksRepo: MongoRepository<Tasks>,
+    private userService: UsersService,
   ) {}
 
   async getTasks(): Promise<{ data: Tasks[] }> {
@@ -28,14 +31,26 @@ export class TasksService {
   }
 
   async createTask(task: CreateTaskDto): Promise<{ data: Tasks }> {
+    let getCreatedUser: { data: Users };
+
+    let getAssignedUser: { data: Users };
+
+    if (task.created_by) {
+      getCreatedUser = await this.userService.getUser(task.created_by);
+    }
+
+    if (task.assigned_to) {
+      getAssignedUser = await this.userService.getUser(task.assigned_to);
+    }
+
     const newTask = this.tasksRepo.create({
       ...task,
       status: STATUS.PENDING,
       description: task.description ?? null,
       assigned_date: task.assigned_date ?? null,
-      assigned_to: task.assigned_to ?? null,
+      assigned_to: task.assigned_to ? getAssignedUser.data : null,
       completed_date: null,
-      created_by: task.created_by ?? null,
+      created_by: task.created_by ? getCreatedUser.data : null,
       due_date: task.due_date ?? null,
       priority: task.priority ?? null,
       image: task.image ?? null,
@@ -47,7 +62,15 @@ export class TasksService {
   }
 
   async updateTask(id: string, task: UpdateTaskDto): Promise<{ data: Tasks }> {
-    const updateTask = await this.tasksRepo.update({ id: id }, task);
+    let getAssignedUser: { data: Users };
+
+    if (task.assigned_to) {
+      getAssignedUser = await this.userService.getUser(task.assigned_to);
+    }
+    const updateTask = await this.tasksRepo.update(
+      { id: id },
+      { ...task, assigned_to: task.assigned_to ? getAssignedUser.data : null },
+    );
 
     if (!updateTask) {
       throw new NotFoundException();
