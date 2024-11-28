@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -8,6 +9,7 @@ import { Users } from './users.entity';
 import { MongoRepository } from 'typeorm';
 import { CreateUserDto, ROLE } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -52,5 +54,23 @@ export class UsersService {
     const newUser = await this.usersRepo.save(addUser);
 
     return { data: newUser };
+  }
+
+  async updateUser(id: string, user: UpdateUserDto): Promise<{ data: Users }> {
+    if (!Object.keys(user).length) {
+      throw new BadRequestException();
+    }
+
+    console.log(user);
+
+    const updateUser = await this.usersRepo.update({ id: id }, user);
+
+    if (!updateUser) {
+      throw new NotFoundException();
+    }
+
+    const updatedUser = await this.getUser(id);
+
+    return { data: updatedUser.data };
   }
 }
