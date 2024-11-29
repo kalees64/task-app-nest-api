@@ -10,7 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { TasksService } from './tasks.service';
+import { TaskService } from './tasks.service';
 import { Tasks } from './tasks.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -20,8 +20,8 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 @Controller('tasks')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
-export class TasksController {
-  constructor(private tasksService: TasksService) {}
+export class TaskController {
+  constructor(private tasksService: TaskService) {}
 
   @Get()
   async getTasks(): Promise<{ data: Tasks[] }> {

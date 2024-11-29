@@ -4,15 +4,15 @@ import { Tasks } from './tasks.entity';
 import { MongoRepository } from 'typeorm';
 import { CreateTaskDto, STATUS } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/users/users.service';
 import { Users } from 'src/users/users.entity';
 
 @Injectable()
-export class TasksService {
+export class TaskService {
   constructor(
     @InjectRepository(Tasks)
     private readonly tasksRepo: MongoRepository<Tasks>,
-    private userService: UsersService,
+    private userService: UserService,
   ) {}
 
   async getTasks(): Promise<{ data: Tasks[] }> {

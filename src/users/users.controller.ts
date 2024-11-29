@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { Body, Post } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UserService } from './users.service';
 import { Users } from './users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -19,8 +19,8 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 @Controller('users')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
-export class UsersController {
-  constructor(private userService: UsersService) {}
+export class UserController {
+  constructor(private userService: UserService) {}
 
   @Get()
   async getUsers(): Promise<{ data: Users[] }> {
