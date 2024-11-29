@@ -38,7 +38,7 @@ export class UsersService {
     const findUser = await this.usersRepo.findOneBy({ email: user.email });
 
     if (findUser) {
-      throw new ConflictException('Email already exists');
+      throw new BadRequestException('Email already exists');
     }
 
     // const salt = await bcrypt.genSalt();

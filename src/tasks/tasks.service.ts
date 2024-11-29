@@ -31,16 +31,16 @@ export class TasksService {
   }
 
   async createTask(task: CreateTaskDto): Promise<{ data: Tasks }> {
-    let getCreatedUser: { data: Users };
+    let createdUser: { data: Users };
 
-    let getAssignedUser: { data: Users };
+    let assignedUser: { data: Users };
 
     if (task.created_by) {
-      getCreatedUser = await this.userService.getUser(task.created_by);
+      createdUser = await this.userService.getUser(task.created_by);
     }
 
     if (task.assigned_to) {
-      getAssignedUser = await this.userService.getUser(task.assigned_to);
+      assignedUser = await this.userService.getUser(task.assigned_to);
     }
 
     const newTask = this.tasksRepo.create({
@@ -48,9 +48,9 @@ export class TasksService {
       status: STATUS.PENDING,
       description: task.description ?? null,
       assigned_date: task.assigned_date ?? null,
-      assigned_to: task.assigned_to ? getAssignedUser.data : null,
+      assigned_to: task.assigned_to ? assignedUser.data : null,
       completed_date: null,
-      created_by: task.created_by ? getCreatedUser.data : null,
+      created_by: task.created_by ? createdUser.data : null,
       due_date: task.due_date ?? null,
       priority: task.priority ?? null,
       image: task.image ?? null,
@@ -62,21 +62,21 @@ export class TasksService {
   }
 
   async updateTask(id: string, task: UpdateTaskDto): Promise<{ data: Tasks }> {
-    let getAssignedUser: { data: Users };
+    let assignedUser: { data: Users };
 
-    let getExistingTaskData: { data: Tasks };
+    let existingTaskData: { data: Tasks };
 
     if (task.assigned_to) {
-      getAssignedUser = await this.userService.getUser(task.assigned_to);
-      getExistingTaskData = await this.getTask(id);
+      assignedUser = await this.userService.getUser(task.assigned_to);
+      existingTaskData = await this.getTask(id);
     }
     const updateTask = await this.tasksRepo.update(
       { id: id },
       {
         ...task,
         assigned_to: task.assigned_to
-          ? getAssignedUser.data
-          : getExistingTaskData.data.assigned_to,
+          ? assignedUser.data
+          : existingTaskData.data.assigned_to,
       },
     );
 
